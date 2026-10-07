@@ -1,0 +1,163 @@
+{% extends "base.html" %}
+{% block title %}Admin · Registrations{% endblock %}
+
+{% block content %}
+<section class="admin-shell" id="adminRoot">
+  <div class="wrap">
+
+    <!-- Top bar -->
+    <div class="admin-bar">
+      <div>
+        <span class="epass-tag">Admin</span>
+        <h2>Registrations</h2>
+      </div>
+      <a href="{{ url_for('admin_logout') }}" class="btn ghost sm">Log out</a>
+    </div>
+
+    <!-- Stats -->
+    <div class="stats">
+      <div class="stat"><span>Total</span><b id="statTotal">{{ stats.total }}</b></div>
+      <div class="stat"><span>Pending</span><b id="statPending">{{ stats.pending }}</b></div>
+      <div class="stat ok"><span>Approved</span><b id="statApproved">{{ stats.approved }}</b></div>
+      <div class="stat bad"><span>Rejected</span><b id="statRejected">{{ stats.rejected }}</b></div>
+    </div>
+
+    <!-- Filters -->
+    <div class="admin-filters">
+      <input class="input" id="searchFilter" type="text"
+             placeholder="Search name, roll, ref ID, phone, UTR...">
+      <select class="input" id="statusFilter">
+        <option value="">All statuses</option>
+        <option value="pending_approval">Pending approval</option>
+        <option value="approved">Approved</option>
+        <option value="rejected">Rejected</option>
+      </select>
+    </div>
+
+    <!-- Table -->
+    <div class="admin-table-wrap">
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th style="width:130px">Ref ID</th>
+            <th style="width:160px">Name</th>
+            <th style="width:110px">Roll</th>
+            <th style="width:150px">Course · Year</th>
+            <th style="width:120px">Phone</th>
+            <th style="width:130px">UTR</th>
+            <th style="width:90px">Shot</th>
+            <th style="width:110px">Status</th>
+            <th style="width:280px">Actions</th>
+          </tr>
+        </thead>
+        <tbody id="adminTbody">
+        {% for r in regs %}
+          <tr data-id="{{ r.id }}"
+              data-status="{{ r.status }}"
+              data-code="{{ r.ref_code }}"
+              data-names="{{ r.name }}"
+              data-emails="{{ r.email }}"
+              data-phones="{{ r.phone }}"
+              data-roll="{{ r.roll }}"
+              data-utr="{{ r.utr or '' }}">
+            <td class="cell-strong mono">{{ r.ref_code }}</td>
+            <td>{{ r.name }}</td>
+            <td class="mono">{{ r.roll }}</td>
+            <td>{{ r.branch }} <span class="muted">· {{ r.year }}</span></td>
+            <td class="mono">{{ r.phone }}</td>
+            <td class="mono">{{ r.utr or '—' }}</td>
+            <td>
+              {% if r.screenshot_path %}
+                <button type="button" class="btn btn-mini view-shot"
+                        data-id="{{ r.id }}" data-code="{{ r.ref_code }}">View</button>
+              {% else %}<span class="muted">—</span>{% endif %}
+            </td>
+            <td>
+              <span class="badge
+                {% if r.status == 'approved' %}badge-active
+                {% elif r.status == 'rejected' %}badge-inactive
+                {% elif r.status == 'pending_approval' %}badge-pending
+                {% else %}badge-ghost{% endif %}">
+                {{ r.status.replace('_', ' ').title() }}
+              </span>
+            </td>
+            <td>
+              <div class="row-actions">
+                <button type="button" class="btn btn-mini details-btn">Details</button>
+                {% if r.status == 'approved' %}
+                  <a class="btn btn-mini btn-ghost" target="_blank"
+                     href="{{ url_for('admin_epass', reg_id=r.id) }}">e-Pass</a>
+                {% endif %}
+                <button class="btn btn-mini btn-approve approve-btn"
+                        data-id="{{ r.id }}"
+                        {% if r.status != 'pending_approval' %}disabled{% endif %}>Approve</button>
+                <button class="btn btn-mini btn-reject reject-btn"
+                        data-id="{{ r.id }}"
+                        {% if r.status != 'pending_approval' %}disabled{% endif %}>Reject</button>
+              </div>
+            </td>
+          </tr>
+
+          <!-- Detail row -->
+          <tr class="detail-row" data-for="{{ r.id }}" hidden>
+            <td colspan="9">
+              <div class="detail-panel">
+                <div class="detail-grid">
+                  <div class="detail-block">
+                    <h4>Student</h4>
+                    <p><b>{{ r.name }}</b></p>
+                    <p class="muted mono">{{ r.roll }}</p>
+                    <p>{{ r.branch }} · {{ r.year }}</p>
+                  </div>
+                  <div class="detail-block">
+                    <h4>Contact</h4>
+                    <p><a href="tel:{{ r.phone }}">{{ r.phone }}</a></p>
+                    <p><a href="mailto:{{ r.email }}">{{ r.email }}</a></p>
+                  </div>
+                  <div class="detail-block">
+                    <h4>Payment</h4>
+                    <p>₹{{ r.amount }}</p>
+                    <p class="mono">UTR: {{ r.utr or '—' }}</p>
+                  </div>
+                  <div class="detail-block">
+                    <h4>Meta</h4>
+                    <p class="mono">Ref: {{ r.ref_code }}</p>
+                    <p class="muted">Submitted {{ r.created_at[:16].replace('T', ' ') }}</p>
+                    {% if r.approved_at %}<p class="muted">Approved {{ r.approved_at[:16].replace('T', ' ') }}</p>{% endif %}
+                  </div>
+                </div>
+                {% if r.notes %}<div class="notes">Reason: {{ r.notes }}</div>{% endif %}
+              </div>
+            </td>
+          </tr>
+        {% endfor %}
+
+        {% if not regs %}
+          <tr><td colspan="9" class="empty">No registrations yet.</td></tr>
+        {% endif %}
+        </tbody>
+      </table>
+    </div>
+
+    <div class="empty" id="emptyFilter" hidden>No results match your filters.</div>
+  </div>
+</section>
+
+<!-- Screenshot modal -->
+<div class="modal-backdrop" id="shotModal" hidden>
+  <div class="modal">
+    <div class="modal-head">
+      <h3>Screenshot · <span id="modalCode"></span></h3>
+      <button class="modal-close" id="modalClose">×</button>
+    </div>
+    <div class="modal-body">
+      <img id="modalImg" src="" alt="Payment screenshot">
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>window.__ADMIN__ = true;</script>
+<script src="{{ url_for('static', filename='js/admin.js') }}"></script>
+{% endblock %}

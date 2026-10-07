@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+{% block title %}e-Pass · Dandiya Night{% endblock %}
+
+{% block content %}
+<section class="verify-page">
+  <div class="wrap">
+
+  {% if error %}
+    <div class="verify-msg">
+      <div class="msg-icon">!</div>
+      <h2>{% if reg %}Not ready yet{% else %}Not found{% endif %}</h2>
+      <p>{{ error }}</p>
+      {% if reg %}<code class="ref-display">{{ reg.ref_code }}</code>{% endif %}
+      <a href="{{ url_for('index') }}#verify" class="btn ghost">Try another ID</a>
+    </div>
+
+  {% else %}
+    <div class="epass-wrap">
+
+      <div class="epass" id="epass">
+        <div class="epass-glow"></div>
+
+        <div class="epass-head">
+          <span class="epass-tag">Exclusive e-Pass</span>
+          <h2>Dandiya Night</h2>
+          <p>Vaagdevi students only · ₹{{ reg.amount }}</p>
+        </div>
+
+        <div class="epass-main">
+          <div class="epass-fields">
+            <div class="ef"><span class="ef-k">Name</span><span class="ef-v">{{ reg.name }}</span></div>
+            <div class="ef"><span class="ef-k">Roll no.</span><span class="ef-v mono">{{ reg.roll }}</span></div>
+            <div class="ef"><span class="ef-k">Course</span><span class="ef-v">{{ reg.branch }}</span></div>
+            <div class="ef"><span class="ef-k">Year</span><span class="ef-v">{{ reg.year }}</span></div>
+            <div class="ef"><span class="ef-k">Ref. ID</span><span class="ef-v mono">{{ reg.ref_code }}</span></div>
+          </div>
+          <div class="epass-qr">
+            {{ qr_svg|safe }}
+            <span>Scan to verify</span>
+          </div>
+        </div>
+
+        <div class="epass-perf"></div>
+
+        <div class="epass-foot">
+          <span>Admit one</span>
+          <span>Valid with college ID</span>
+          <span>Approved {{ (reg.approved_at or reg.updated_at)[:10] }}</span>
+        </div>
+      </div>
+
+      <div class="epass-actions">
+        <button class="btn" id="downloadBtn">Download as image</button>
+        <button class="btn ghost" id="printBtn">Print / Save PDF</button>
+        {% if admin %}
+          <a class="btn ghost" href="{{ url_for('admin') }}">← Back to admin</a>
+        {% endif %}
+      </div>
+
+    </div>
+  {% endif %}
+
+  </div>
+</section>
+
+{% block scripts %}
+{% if not error %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script>
+  const $ = id => document.getElementById(id);
+  $("downloadBtn").addEventListener("click", async () => {
+    const btn = $("downloadBtn");
+    btn.disabled = true; btn.textContent = "Rendering...";
+    try {
+      const canvas = await html2canvas($("epass"), {
+        backgroundColor: "#0a0416",
+        scale: 2,
+        useCORS: true,
+      });
+      const a = document.createElement("a");
+      a.download = "dandiya-epass-{{ reg.ref_code }}.png";
+      a.href = canvas.toDataURL("image/png");
+      a.click();
+    } catch (e) { alert("Download failed: " + e.message); }
+    btn.disabled = false; btn.textContent = "Download as image";
+  });
+  $("printBtn").addEventListener("click", () => window.print());
+</script>
+{% endif %}
+{% endblock %}
+{% endblock %}

@@ -1,0 +1,245 @@
+{% extends "base.html" %}
+{% block content %}
+
+<!-- ==================== HERO ==================== -->
+<section class="hero">
+  <div class="wrap">
+    <div>
+      <div class="chip"><b></b>Open to Vaagdevi students only</div>
+      <h1>Dandiya<span>Night</span></h1>
+      <p class="lead">One night of music, colour and dandiya sticks, made for the students of Vaagdevi. Your pass is just ₹{{ price }}.</p>
+      <div class="cta">
+        <a href="#register" class="btn">Register now</a>
+        <p class="price-note"><strong>₹{{ price }}</strong>per student, plus ₹{{ fee }} convenience fee</p>
+      </div>
+    </div>
+
+    <div class="stage" aria-hidden="true">
+      <svg class="sticks" viewBox="0 0 400 400" fill="none">
+        <defs>
+          <linearGradient id="st" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#d9b8ff"/><stop offset="1" stop-color="#6a1fd9"/>
+          </linearGradient>
+          <filter id="gl"><feGaussianBlur stdDeviation="6"/></filter>
+        </defs>
+        <g transform="rotate(38 200 200)" filter="url(#gl)" opacity=".5"><rect x="190" y="20" width="20" height="360" rx="10" fill="#8b3dff"/></g>
+        <g transform="rotate(38 200 200)"><rect x="192" y="30" width="16" height="340" rx="8" fill="url(#st)"/></g>
+        <g transform="rotate(-38 200 200)" filter="url(#gl)" opacity=".5"><rect x="190" y="20" width="20" height="360" rx="10" fill="#8b3dff"/></g>
+        <g transform="rotate(-38 200 200)"><rect x="192" y="30" width="16" height="340" rx="8" fill="url(#st)"/></g>
+      </svg>
+      <div class="pass">
+        <small>Exclusive pass</small>
+        <h3>Dandiya Night</h3>
+        <p>Vaagdevi students only</p>
+        <div class="amount"><sup>₹</sup>{{ price }}<span>/ entry</span></div>
+        <div class="perf"></div>
+        <div class="barcode"></div>
+        <div class="admit"><span>Admit one</span><span>Valid with college ID</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== REGISTER ==================== -->
+<section id="register">
+  <div class="wrap">
+    <div class="reg">
+      <div class="reg-side">
+        <h2>Reserve your pass</h2>
+        <p>Fill in your details and your spot is held for you.</p>
+        <ul class="sum">
+          <li><span>Dandiya Night pass</span><span>₹{{ price }}</span></li>
+          <li><span>Convenience fee</span><span>₹{{ fee }}</span></li>
+          <li class="total"><span>Total</span><span>₹{{ total }}</span></li>
+        </ul>
+        <ul class="perks">
+          <li>e-Pass sent to you after verification</li>
+          <li>Payment checked by the organisers</li>
+          <li>One pass per student</li>
+        </ul>
+      </div>
+
+      <div>
+        <div class="steps" id="steps" aria-label="Progress">
+          <span data-s="form">Details</span><i></i>
+          <span data-s="cart">Cart</span><i></i>
+          <span data-s="pay">Payment</span>
+        </div>
+
+        <!-- STEP 1 -->
+        <form id="regForm" novalidate>
+          <div class="f full">
+            <label for="name">Full name</label>
+            <input id="name" name="name" type="text" placeholder="As on your college ID" autocomplete="name" required>
+          </div>
+          <div class="f">
+            <label for="roll">Roll number</label>
+            <input id="roll" name="roll" type="text" placeholder="e.g. 22881A0501" autocapitalize="characters" required>
+          </div>
+          <div class="f">
+            <label for="phone">Phone number</label>
+            <input id="phone" name="phone" type="tel" inputmode="numeric" placeholder="10-digit mobile" pattern="[6-9][0-9]{9}" autocomplete="tel-national" required>
+          </div>
+          <div class="f">
+            <label for="branch">Course</label>
+            <div class="dd">
+              <button type="button" class="dd-btn ph" aria-haspopup="listbox" aria-expanded="false">Select course</button>
+              <div class="dd-list"></div>
+              <select id="branch" name="branch" required tabindex="-1" aria-hidden="true">
+                <option value="" selected disabled>Select course</option>
+                <optgroup label="Engineering (B.Tech)">
+                  <option>CSE</option><option>CSE (AI &amp; ML)</option><option>CSE (Data Science)</option>
+                  <option>IT</option><option>ECE</option><option>EEE</option>
+                  <option>Mechanical</option><option>Civil</option>
+                </optgroup>
+                <optgroup label="Degree courses">
+                  <option>B.Sc</option><option>B.Com</option><option>BBA</option>
+                  <option>BCA</option><option>BA</option>
+                </optgroup>
+                <optgroup label="Pharmacy courses">
+                  <option>B.Pharmacy</option><option>Pharm.D</option>
+                  <option>M.Pharmacy</option><option>D.Pharmacy</option>
+                </optgroup>
+                <option>Other</option>
+              </select>
+            </div>
+          </div>
+          <div class="f">
+            <label for="year">Year</label>
+            <div class="dd">
+              <button type="button" class="dd-btn ph" aria-haspopup="listbox" aria-expanded="false">Select year</button>
+              <div class="dd-list"></div>
+              <select id="year" name="year" required tabindex="-1" aria-hidden="true">
+                <option value="" selected disabled>Select year</option>
+                <option>1st year</option><option>2nd year</option><option>3rd year</option>
+                <option>4th year</option><option>5th year</option><option>6th year</option>
+              </select>
+            </div>
+          </div>
+          <div class="f full">
+            <label for="email">Email</label>
+            <input id="email" name="email" type="email" placeholder="Your pass will be sent here" autocomplete="email" required>
+            <span class="hint">Use an email you check often.</span>
+          </div>
+          <button type="submit" class="btn">Register</button>
+          <p class="fine">One pass per student. Passes are non-transferable.</p>
+        </form>
+
+        <!-- STEP 2 -->
+        <div class="pane" id="cart" hidden>
+          <h3 class="pt">Your cart</h3>
+          <div class="item">
+            <div class="thumb">₹</div>
+            <div><b>Dandiya Night pass</b><span>Exclusive, Vaagdevi students only</span><span>Quantity: 1</span></div>
+            <div class="amt">₹{{ price }}</div>
+          </div>
+          <div class="who">
+            <div><b id="c-name"></b><span id="c-sub"></span></div>
+            <button type="button" class="link" id="editBtn">Edit details</button>
+          </div>
+          <ul class="sum bill">
+            <li><span>Pass (1)</span><span>₹{{ price }}</span></li>
+            <li><span>Convenience fee</span><span>₹{{ fee }}</span></li>
+            <li class="total"><span>Total</span><span>₹{{ total }}</span></li>
+          </ul>
+          <div class="actions">
+            <button type="button" class="btn ghost" id="cartBack">Back</button>
+            <button type="button" class="btn" id="toPay">Proceed to payment</button>
+          </div>
+        </div>
+
+        <!-- STEP 3 -->
+        <form class="pane" id="pay" novalidate hidden>
+          <h3 class="pt">Payment</h3>
+          <ol class="how">
+            <li>Scan and pay ₹{{ total }}</li>
+            <li>Enter your UTR</li>
+            <li>Upload the screenshot</li>
+          </ol>
+          <div class="qrbox">
+            <div class="qr">
+              <span>Your QR here</span>
+              <img src="{{ url_for('static', filename='bank_qr.jpeg') }}" alt="Payment QR code"
+                   onload="this.previousElementSibling.remove();this.parentElement.classList.add('ok')"
+                   onerror="this.remove();document.getElementById('qrSave').hidden=true">
+            </div>
+            <div class="qrinfo">
+              <b>Pay ₹{{ total }}</b>
+              <p>Scan this QR with any UPI app and pay the exact amount. On your phone? Save the QR, then choose it from your gallery inside your UPI app.</p>
+              <a class="btn ghost sm" id="qrSave" href="{{ url_for('static', filename='qr.png') }}" download="dandiya-night-qr.png">Save QR</a>
+            </div>
+          </div>
+          <div class="f">
+            <label for="utr">UTR / UPI reference number</label>
+            <input id="utr" type="text" inputmode="numeric" placeholder="12-digit number" pattern="[0-9]{12}" maxlength="12" autocomplete="off" required>
+            <span class="hint">You can find it in your UPI app, in the payment details.</span>
+          </div>
+          <div class="f">
+            <label for="shot">Payment screenshot</label>
+            <div class="drop" id="drop">
+              <input id="shot" type="file" accept="image/*" required>
+              <span id="dropTxt">Tap to upload your screenshot</span>
+              <img id="prev" alt="Screenshot preview" hidden>
+            </div>
+          </div>
+          <p class="err" id="payErr" role="alert" hidden></p>
+          <div class="actions">
+            <button type="button" class="btn ghost" id="payBack">Back</button>
+            <button type="submit" class="btn" id="payBtn">Submit payment details</button>
+          </div>
+        </form>
+
+        <!-- DONE -->
+        <div class="done" id="done" role="status" aria-live="polite" hidden>
+          <svg class="ring" viewBox="0 0 52 52" aria-hidden="true">
+            <circle cx="26" cy="26" r="24"/>
+            <path d="M15 27l8 8 14-16"/>
+          </svg>
+          <h3>Payment submitted</h3>
+          <p id="doneMsg"></p>
+          <code id="ref"></code>
+          <ol class="next">
+            <li>We check your UTR and screenshot</li>
+            <li>Your e-pass link is activated</li>
+            <li>Show it at the gate with your college ID</li>
+          </ol>
+          <div class="actions" style="justify-content:center;max-width:380px">
+            <a class="btn" id="viewPass" href="#" target="_blank">View e-pass now</a>
+            <button class="btn ghost" id="again" type="button">Register another</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== VERIFY / DOWNLOAD e-PASS ==================== -->
+<section id="verify">
+  <div class="wrap">
+    <div class="verify">
+      <div>
+        <h2>Already registered?</h2>
+        <p class="sub">Enter the reference ID you got after payment to check your status and download your e-pass.If you need help, contact on +91 9133651540, +91 9985213286.</p>
+      </div>
+      <form id="verifyForm" class="verify-form" novalidate>
+        <input id="verifyRef" type="text" placeholder="DN-K7QF-2XBM-9TRH-4WPZ" autocomplete="off" required>
+        <button type="submit" class="btn">Get e-pass</button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== FAQ ==================== -->
+<section id="faq">
+  <div class="wrap">
+    <h2 style="margin-bottom:36px">Questions students ask</h2>
+    <div class="faq">
+      <details><summary>Can someone from outside Vaagdevi join?</summary><p>No. This pass is exclusive to Vaagdevi students, and entry is checked against your college ID.</p></details>
+      <details><summary>What do I need to bring?</summary><p>Your e-pass, on your phone or printed, and your college ID. Both are checked at the gate.</p></details>
+      <details><summary>Can I transfer my pass to a friend?</summary><p>No. Each pass is linked to the student who registered.</p></details>
+      <details><summary>How do I download my e-pass?</summary><p>Once the organisers approve your payment, enter your reference ID in the “Already registered?” box above and click Get e-pass.</p></details>
+    </div>
+  </div>
+</section>
+
+{% endblock %}

@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}Admin · Dandiya Night{% endblock %}
+
+{% block content %}
+<section class="admin-login">
+  <div class="login-card">
+    <span class="epass-tag">Admin</span>
+    <h2>Sign in</h2>
+    <p class="sub">Enter the admin password to view and manage registrations.</p>
+
+    {% if error %}<p class="err">{{ error }}</p>{% endif %}
+
+    <form method="POST">
+      <div class="f full">
+        <label for="password">Password</label>
+        <input id="password" name="password" type="password" required autofocus
+               autocomplete="current-password" placeholder="••••••••">
+      </div>
+      <button type="submit" class="btn">Sign in</button>
+    </form>
+  </div>
+</section>
+{% endblock %}
