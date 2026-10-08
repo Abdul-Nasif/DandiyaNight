@@ -41,7 +41,7 @@ BUCKET = "payment-screenshots"
 
 sb: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 
-PRICE, FEE, TOTAL = 169, 10, 179
+PRICE, FEE, TOTAL = 159, 0, 159
 
 # -----------------------------------------------------------------
 # Helpers
