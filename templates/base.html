@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#000000">
+<title>{% block title %}Dandiya Night · Vaagdevi Exclusive Pass{% endblock %}</title>
+<meta name="description" content="Exclusive Dandiya Night pass for Vaagdevi students.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+{% block head %}{% endblock %}
+</head>
+<body>
+
+<header class="top">
+  <a href="{{ url_for('index') }}" aria-label="Dandiya Night">
+    <img class="brand" src="{{ url_for('static', filename='eventerlogo.png') }}"
+         width="900" height="377" alt="Eventer, powered by Orion">
+  </a>
+</header>
+
+<main id="top">
+{% block content %}{% endblock %}
+</main>
+
+<footer>
+  <div class="wrap">
+    <span style="display:flex;align-items:center;gap:14px">
+      <img class="brand sm" src="{{ url_for('static', filename='eventerlogo.png') }}"
+           width="900" height="377" alt="Eventer">
+      <span>Dandiya Night · Vaagdevi students</span>
+    </span>
+    <a href="#top">Back to top</a>
+  </div>
+</footer>
+
+<script src="{{ url_for('static', filename='js/main.js') }}"></script>
+{% block scripts %}{% endblock %}
+</body>
+</html>
