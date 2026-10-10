@@ -60,7 +60,16 @@ def gen_ref_code() -> str:
         if not r.data:
             return code
     raise RuntimeError("Could not generate unique ref")
+from datetime import datetime, timezone
 
+def bump_epass_open(reg_id: str) -> None:
+    try:
+        sb.rpc("epass_bump_open", {
+            "reg_id": reg_id,
+            "ts": datetime.now(timezone.utc).isoformat(),
+        }).execute()
+    except Exception:
+        app.logger.exception("epass open bump failed")
 def make_qr_svg(data: str) -> str:
     factory = qrcode.image.svg.SvgPathImage
     img = qrcode.make(data, image_factory=factory, box_size=10, border=1)
@@ -179,7 +188,7 @@ def verify_epass(ref_code):
             "rejected":         "This registration was rejected. Contact the organisers.",
         }.get(reg["status"], "This e-pass is not available.")
         return render_template("verify.html", reg=reg, qr_svg=None, error=msg)
-
+    bump_epass_open(reg["id"])
     base = (PUBLIC_BASE_URL or request.host_url.rstrip("/"))
     verify_url = f"{base}/verify/{reg['ref_code']}"
     qr_svg = make_qr_svg(verify_url)
